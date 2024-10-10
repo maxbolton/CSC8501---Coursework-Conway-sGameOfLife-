@@ -1,0 +1,1 @@
+# CSC8501 - Coursework(Conway'sGameOfLife)
