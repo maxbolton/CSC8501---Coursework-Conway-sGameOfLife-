@@ -9,10 +9,12 @@ Cell::Cell()
 	this->xIndex = -1;
 	this->yIndex = -1;
 	this->state = false;
+	this->edgeCell = false;
 	for (int i = 0; i < 8; i++) {
 		this->neighbours[i] = nullptr;
 	}
 	this->neighbourCount = 0;
+
 }
 
 Cell::Cell(int x, int y)
@@ -20,6 +22,7 @@ Cell::Cell(int x, int y)
 	this->xIndex = x;
 	this->yIndex = y;
 	this->state = false;
+	this->edgeCell = false;
 	for (int i = 0; i < 8; i++) {
 		this->neighbours[i] = nullptr;
 	}
@@ -41,6 +44,11 @@ int Cell::getYIndex() const
 bool Cell::getState() const
 {
 	return state;
+}
+
+bool Cell::getIsEdgeCell() const
+{
+	return edgeCell;
 }
 
 Cell** Cell::getNeighbours()
@@ -75,14 +83,14 @@ void Cell::SetNeighbours(Grid* grid)
 	int ySize = grid->getYSize();
 
 
-	neighbours[0] = (x - 1 >= 0 && y + 1 < ySize) ? &grid->getGrid()[x - 1][y + 1] : nullptr;
-	neighbours[1] = (y + 1 < ySize) ? &grid->getGrid()[x][y + 1] : nullptr;
-	neighbours[2] = (x + 1 < xSize && y + 1 < ySize) ? &grid->getGrid()[x + 1][y + 1] : nullptr;
-	neighbours[3] = (x - 1 >= 0) ? &grid->getGrid()[x - 1][y] : nullptr;
-	neighbours[4] = (x + 1 < xSize) ? &grid->getGrid()[x + 1][y] : nullptr;
-	neighbours[5] = (x - 1 >= 0 && y - 1 >= 0) ? &grid->getGrid()[x - 1][y - 1] : nullptr;
-	neighbours[6] = (y - 1 >= 0) ? &grid->getGrid()[x][y - 1] : nullptr;
-	neighbours[7] = (x + 1 < xSize && y - 1 >= 0) ? &grid->getGrid()[x + 1][y - 1] : nullptr;
+	neighbours[0] = (x - 1 >= 0 && y + 1 < ySize) ? &grid->getGrid()[x - 1][y + 1] : nullptr; // top right
+	neighbours[1] = (y + 1 < ySize) ? &grid->getGrid()[x][y + 1] : nullptr; // right
+	neighbours[2] = (x + 1 < xSize && y + 1 < ySize) ? &grid->getGrid()[x + 1][y + 1] : nullptr; // bottom right
+	neighbours[3] = (x + 1 < xSize) ? &grid->getGrid()[x + 1][y] : nullptr; // bottom
+	neighbours[4] = (x + 1 < xSize && y - 1 >= 0) ? &grid->getGrid()[x + 1][y - 1] : nullptr; // bottom left
+	neighbours[5] = (y - 1 >= 0) ? &grid->getGrid()[x][y - 1] : nullptr; // left
+	neighbours[6] = (x - 1 >= 0 && y - 1 >= 0) ? &grid->getGrid()[x - 1][y - 1] : nullptr; // top left
+	neighbours[7] = (x - 1 >= 0) ? &grid->getGrid()[x - 1][y] : nullptr; // top
 
 	int count = 0;
 	for (int i = 0; i < 8; i++)
@@ -97,15 +105,15 @@ void Cell::SetNeighbours(Grid* grid)
 
 #pragma endregion
 
-void Cell::UpdateNeighbours(Grid** grid)
-{
-	// for each cell in the grid
-	for (int i = 0; i < grid[0]->getYSize(); i++)
-	{
-		for (int j = 0; j < grid[0]->getXSize(); j++)
-		{
-			// set the neighbours of the cell
-			grid[0]->getGrid()[i][j].SetNeighbours(grid[0]);
-		}
+bool Cell::checkIfEdge(Grid* grid) {
+
+	int xSize = grid->getXSize();
+	int ySize = grid->getYSize();
+
+	if (this->xIndex == 0 || xIndex == xSize - 1 || this->yIndex == 0 || yIndex == ySize - 1) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }

@@ -6,6 +6,7 @@ class Cell {
 		int xIndex;
 		int yIndex;
 		bool state;
+		bool edgeCell;
 		Cell* neighbours[8];
 		int neighbourCount;
 
@@ -18,6 +19,7 @@ class Cell {
 		int getXIndex() const;
 		int getYIndex() const;
 		bool getState() const;
+		bool getIsEdgeCell() const;
 		Cell** getNeighbours();
 		int getNeighbourCount() const;
 
@@ -25,7 +27,9 @@ class Cell {
 		void setIndex(int x, int y);
 		void SetState(bool status);
 		void SetNeighbours(Grid* grid);
+
 		void UpdateNeighbours(Grid** grid);
+		bool checkIfEdge(Grid* grid);
 
 
 };

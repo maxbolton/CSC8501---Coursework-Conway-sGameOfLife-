@@ -8,6 +8,7 @@ class Grid {
 		int x_size;
 		int y_size;
 		int step_count;
+		bool gridState;
 
 		Cell** grid;
 
@@ -25,19 +26,21 @@ class Grid {
 		void randomlyPopulate(int x, unsigned int seed);
 		void startGame(int x, unsigned int seed);
 		bool gridStateCheck();
-		void patternSearch();
-		void setGrid();
-		Cell** getGrid();
+		void patternSearch(const bool** patternArray, int patternCount, int height, int width);
 
 
 
 		int getXSize();
 		int getYSize();
 		int getStepCount();
+		bool getGridState();
+		Cell** getGrid();
 
 		void setXSize(int x);
 		void setYSize(int y);
 		void setStepCount(int step);
+		void setGridState(bool state);
+		void setGrid();
 
 
 };

@@ -1,12 +1,13 @@
 #include <iostream>
 #include "Grid.h"
 #include "Cell.h"
+#include "Patterns.h"
 #include <random>
 #include <thread>
 
 using namespace std;
 
-
+#pragma region Constructors
 Grid::Grid()
 {
 	this->x_size = default_size;
@@ -38,7 +39,23 @@ Grid::~Grid()
 	}
 	delete[] grid;
 }
+#pragma endregion
 
+const bool* patterns4x4[1] = { &blockPattern[0][0] };
+
+const bool* patterns5x5[9] = { &boatPattern[0][0], &boatPattern90[0][0], &boatPattern180[0][0], &boatPattern270[0][0], &tubPattern[0][0], &gliderPattern[0][0], &gliderPattern90[0][0], &gliderPattern180[0][0], &gliderPattern270[0][0] };
+
+const bool* patterns5x6[1] = { &beehivePattern[0][0] };
+
+const bool* pattern6x5[1] = { &beehivePattern90[0][0] };
+
+const bool* patterns6x6[4] = { &loafPattern[0][0], &loafPattern90[0][0], &loafPattern180[0][0], &loafPattern270[0][0] };
+
+const bool* patterns6x7[1] = { &lwssPattern[0][0] };
+
+const bool* patterns7x8[1] = { &mwssPattern[0][0] };
+
+const bool* patterns7x9[1] = { &hwssPattern[0][0] };
 
 #pragma region Grid Methods
 void Grid::populateGrid() {
@@ -50,13 +67,14 @@ void Grid::populateGrid() {
 		for (int j = 0; j < x_size; j++)
 		{
 			grid[i][j].setIndex(j, i);
+			grid[i][j].checkIfEdge(this);
 		}
 	}
 }
 
-
 void Grid::printGrid()
 {
+
 	for (int i = 0; i < y_size; i++)
 	{
 		for (int j = 0; j < x_size; j++)
@@ -150,7 +168,6 @@ void Grid::randomlyPopulate(int x, unsigned int seed)
 	}
 }
 
-
 void Grid::startGame(int x, unsigned int seed) {
 	populateGrid();
 	randomlyPopulate(x, seed);
@@ -160,13 +177,13 @@ void Grid::startGame(int x, unsigned int seed) {
 
 		system("cls");
 		this->printGrid();
+		this->gridStateCheck();
 		this->updateGrid();
 		this_thread::sleep_for(chrono::milliseconds(500));
 
 	}
 
 }
-
 
 bool Grid::gridStateCheck() {
 	// if all cells are dead, end the game
@@ -177,28 +194,80 @@ bool Grid::gridStateCheck() {
 			if (grid[i][j].getState())
 			{
 				// break out of the loop and do patternSearch
-				patternSearch();
+				this->setGridState(true);
+				patternSearch(patterns4x4, 1, 4, 4);
 				return true;
 			}
 		}
 	}
+	this->setGridState(false);
 	return false;
 
 }
 
-void Grid::patternSearch() {
-	// search for patterns
+void Grid::patternSearch(const bool** patternArray, int patternCount, int height, int width) {
+
+	// Iterate through the grid, allowing the pattern to start anywhere
+	// start at -1 & end at +1 to account 1 cell buffer around grid
+
+	for (int p = 0; p < patternCount; p++)
+	{
+
+		for (int i = -1; i < (y_size + 2) - height; i++) { // rows
+			for (int j = -1; j < (x_size + 2) - width; j++) { // columns
+
+				bool match = true;
+
+				int patternHeight = height;
+				int patternWidth = width;
+
+				int heightStart = 0;
+				int widthStart = 0;
+
+				// if top row, reduce pattern height by 1 and start at position 1 in the pattern
+				if (i < 0) { patternHeight -= 1; heightStart = 1; };
+				// if left column, reduce pattern width by 1 and start at position 1 in the pattern
+				if (j < 0) { patternWidth -= 1; widthStart = 1; };
+
+				// if bottom row, reduce pattern height by 1
+				if (i > (y_size - height)) { patternHeight -= 1; };
+				// if right column, reduce pattern width by 1
+				if (j > (x_size - width)) { patternWidth -= 1; };
+
+
+				// Iterate through the pattern, correcting the length of array if cell is an edge.
+
+
+				for (int k = 0 + heightStart; k < patternHeight + heightStart; k++) {
+					for (int l = 0 + widthStart; l < patternWidth + widthStart; l++) {
+
+
+						// compare grid cell to pattern cell accounting for the buffer
+						int iOffset = i + k;
+						int jOffset = j + l;
+
+
+						if (grid[iOffset][jOffset].getState() != patternArray[p][k * width + l]) {
+							match = false;
+							//cout << "No pattern found: " << j << ", " << i << " -> " << jOffset << ", " << iOffset << endl;
+							break;
+
+						}
+					}
+					if (!match) { break; }
+				}
+				if (match) {
+					cout << "Pattern found at (" << i << ", " << j << ")" << endl;
+				}
+			}
+		}
+	}
+
+	return;
 }
 
-void Grid::setGrid()
-{
-	this->grid = grid;
-}
 
-Cell** Grid::getGrid()
-{
-	return grid;
-}
+
 #pragma endregion
 
 #pragma region Getters
@@ -217,6 +286,16 @@ int Grid::getStepCount()
 	return step_count;
 }
 
+bool Grid::getGridState()
+{
+	return gridState;
+}
+
+Cell** Grid::getGrid()
+{
+	return grid;
+}
+
 #pragma endregion
 
 #pragma region Setters
@@ -233,6 +312,16 @@ void Grid::setYSize(int y)
 void Grid::setStepCount(int step)
 {
 	step_count = step;
+}
+
+void Grid::setGridState(bool state)
+{
+	gridState = state;
+}
+
+void Grid::setGrid()
+{
+	this->grid = grid;
 }
 
 #pragma endregion

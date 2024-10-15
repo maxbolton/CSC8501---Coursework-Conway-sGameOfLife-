@@ -130,10 +130,12 @@
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CSC8501 - Coursework(Conway%27sGameOfLife).cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="Patterns.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Patterns.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
