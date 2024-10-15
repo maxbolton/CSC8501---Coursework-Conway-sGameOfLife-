@@ -1,12 +1,11 @@
 #include "Patterns.h"
 
-Patterns::Patterns(int x, int y, const bool* patterns, int rotationCount, bool flipped)
+Patterns::Patterns(int x, int y, const char* name, const bool* pattern)
 {
 	this->x = x;
 	this->y = y;
-	this->patterns = nullptr;
-	this->rotationCount = rotationCount;
-	this->flipped = flipped;
+	this->name = name;
+	this->pattern = pattern;
 }
 
 Patterns::~Patterns()
@@ -24,19 +23,14 @@ int Patterns::getY()
 	return y;
 }
 
-bool* Patterns::getPatterns()
+const char* Patterns::getName()
 {
-	return patterns;
+	return name;
 }
 
-int Patterns::getRotationCount()
+const bool* Patterns::getPattern()
 {
-	return rotationCount;
-}
-
-bool Patterns::getFlipped()
-{
-	return flipped;
+	return pattern;
 }
 
 #pragma endregion
@@ -52,31 +46,19 @@ void Patterns::setY(int y)
 	this->y = y;
 }
 
-void Patterns::setPatterns(bool* patterns)
+void Patterns::setName(const char* name)
 {
-	this->patterns = patterns;
+	this->name = name;
 }
 
-void Patterns::setRotationCount(int rotationCount)
+void Patterns::setPattern(const bool* pattern)
 {
-	this->rotationCount = rotationCount;
+	this->pattern = pattern;
 }
 
-void Patterns::setFlipped(bool flipped)
-{
-	this->flipped = flipped;
-}
 #pragma endregion
 
 #pragma region Methods
-void Patterns::rotatePattern()
-{
-}
-
-void Patterns::flipPattern()
-{
-}
-
 
 
 #pragma endregion

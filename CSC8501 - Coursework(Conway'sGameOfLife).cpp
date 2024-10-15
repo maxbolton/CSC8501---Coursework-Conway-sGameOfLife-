@@ -6,36 +6,8 @@
 #include "Cell.h"
 #include "Patterns.h"
 #include <thread>
+#include <random>
 using namespace std;
-
-
-
-// instantiate pointers to pattern classes
-
-
-/*
-void allocatePatterns() {
-
-
-	//Patterns* block = new Patterns(4, 4, blocks, 0, 0);
-	//Patterns* beehive = new Patterns(5, 6, beehives, 1, 0);
-	//Patterns* loaf = new Patterns(6, 6, loafs, 4, 0);
-	//Patterns* boat = new Patterns(5, 5, boats, 4, 0);
-	//Patterns* tub = new Patterns(5, 5, tubPattern, 0, 0);
-
-	//Patterns* blinker = new Patterns(5, 3, blinkerPattern, 1, 0);
-	//Patterns* toad = new Patterns(6, 6, toadPattern, 1, 0);
-	//Patterns* beacon = new Patterns(6, 6, beaconPattern, 1, 0);
-	//Patterns* pulsar = new Patterns(15, 15, pulsarPattern, 0);
-	//Patterns* pentadecathlon = new Patterns(12, 5, pentadecathlonPattern, 1, 0);
-
-	//Patterns* glider = new Patterns(5, 5, gliderPattern, 4, 1);
-	//Patterns* lwss = new Patterns(6, 7, lwssPattern, 4);
-	//Patterns* mwss = new Patterns(7, 8, mwssPattern, 4);
-	//Patterns* hwss = new Patterns(7, 9, hwssPattern, 4);
-	
-}
-*/
 
 
 void printPatternArray(const bool** patternArray, int patternCount, int height, int width)
@@ -66,115 +38,152 @@ int main()
 {
     //std::cout << "Hello World!\n";
 
-	const bool* patterns4x4[1] = { &blockPattern[0][0] };
+	// instantiate patternObjects
+	Patterns block = Patterns(4, 4, "block", &blockPattern[0][0]);
+	Patterns beehive = Patterns(5, 6, "beehive", &beehivePattern[0][0]);
+	Patterns beehive90 = Patterns(6, 5, "beehive90", &beehivePattern90[0][0]);
 
-	const bool* patterns5x3[1] = { &blinkerPattern[0][0] };
+	Patterns* stillLifes[3];
+    stillLifes[0] = &block;
+    stillLifes[1] = &beehive;
+    stillLifes[2] = &beehive90;
 
-	const bool* patterns5x5[9] = { &boatPattern[0][0], &boatPattern90[0][0], &boatPattern180[0][0], &boatPattern270[0][0], &tubPattern[0][0], &gliderPattern[0][0], &gliderPattern90[0][0], &gliderPattern180[0][0], &gliderPattern270[0][0] };
+	Patterns* blinker = new Patterns(5, 3, "blinker", &blinkerPattern[0][0]);
+	Patterns* blinker90 = new Patterns(3, 5, "blinker90", &blinkerPattern90[0][0]);
+	Patterns* toad = new Patterns(6, 6, "toad", &toadPattern[0][0]);
+	Patterns* toad90 = new Patterns(6, 6, "toad90", &toadPattern90[0][0]);
 
-	const bool* patterns5x6[1] = { &beehivePattern[0][0] };
+	Patterns** oscillators[4];
+	oscillators[0] = &blinker;
+	oscillators[1] = &blinker90;
+	oscillators[2] = &toad;
+	oscillators[3] = &toad90;
 
-	const bool* pattern6x5[1] = { &beehivePattern90[0][0] };
+	Patterns* glider = new Patterns(5, 5, "glider", &gliderPattern[0][0]);
+	Patterns* glider90 = new Patterns(5, 5, "glider90", &gliderPattern90[0][0]);
+	Patterns* glider180 = new Patterns(5, 5, "glider180", &gliderPattern180[0][0]);
+	Patterns* glider270 = new Patterns(5, 5, "glider270", &gliderPattern270[0][0]);
+	Patterns* lwss = new Patterns(6, 7, "lwss", &lwssPattern[0][0]);
 
-	const bool* patterns6x6[4] = { &loafPattern[0][0], &loafPattern90[0][0], &loafPattern180[0][0], &loafPattern270[0][0] };
+	Patterns** spaceships[5];
+	spaceships[0] = &glider;
+	spaceships[1] = &glider90;
+	spaceships[2] = &glider180;
+	spaceships[3] = &glider270;
+	spaceships[4] = &lwss;
+	
 
-	const bool* patterns6x7[1] = { &lwssPattern[0][0] };
+	//Grid newGame(25, 25, 25);
+	//newGame.startGame(75, 18374234);
 
-	const bool* patterns7x8[1] = { &mwssPattern[0][0] };
-
-	const bool* patterns7x9[1] = { &hwssPattern[0][0] };
-
-	Grid exampleGrid(3,3);
-
-
+	/*
+	Grid exampleGrid(10, 10);
 	exampleGrid.populateGrid();
-	
-	//// set cells (2,2), (2,3), (2,4), (3,4), (4,3)  to true
-	//exampleGrid.getGrid()[2][2].SetState(true);
-	//exampleGrid.getGrid()[2][3].SetState(true);
-	//exampleGrid.getGrid()[2][4].SetState(true);
-	//exampleGrid.getGrid()[3][4].SetState(true);
-	//exampleGrid.getGrid()[4][3].SetState(true);
 
-	//exampleGrid.startGame(25, 256);
-	//exampleGrid.startGame(25, 257);
-	//exampleGrid.startGame(25, 258);
-	//exampleGrid.startGame(25, 1012494);
 
-	
+	// block pattern
 	exampleGrid.getGrid()[1][1].SetState(true);
 	exampleGrid.getGrid()[1][2].SetState(true);
 	exampleGrid.getGrid()[2][1].SetState(true);
 	exampleGrid.getGrid()[2][2].SetState(true);
-	/*
-	exampleGrid.getGrid()[4][4].SetState(true);
-	exampleGrid.getGrid()[4][5].SetState(true);
+
+	// beehive pattern
+	exampleGrid.getGrid()[4][2].SetState(true);
+	exampleGrid.getGrid()[4][3].SetState(true);
+	exampleGrid.getGrid()[5][1].SetState(true);
 	exampleGrid.getGrid()[5][4].SetState(true);
-	exampleGrid.getGrid()[5][5].SetState(true);
-	
+	exampleGrid.getGrid()[6][2].SetState(true);
+	exampleGrid.getGrid()[6][3].SetState(true);
+
+	// beehive90 pattern
+	exampleGrid.getGrid()[2][6].SetState(true);
+	exampleGrid.getGrid()[3][6].SetState(true);
+	exampleGrid.getGrid()[1][7].SetState(true);
+	exampleGrid.getGrid()[4][7].SetState(true);
+	exampleGrid.getGrid()[2][8].SetState(true);
+	exampleGrid.getGrid()[3][8].SetState(true);
 
 
-	exampleGrid.getGrid()[1][0].SetState(true);
-    exampleGrid.getGrid()[1][1].SetState(true);
-	exampleGrid.getGrid()[2][0].SetState(true);
-	exampleGrid.getGrid()[2][1].SetState(true);
+	exampleGrid.printGrid();
+	exampleGrid.patternSearch(stillLifes);
 	*/
 
-	/*cout << "4x4 Patterns" << endl;
-	printPatternArray(patterns4x4, 1, 4, 4);
 
-	cout << "6x6 Patterns" << endl;
-	printPatternArray(patterns6x6, 4, 6, 6);
+	// Command Line Interface
+	cout << "##### Conway's Game of Life #####" << endl;
+	cout << "Select a question to run:" << endl;
+	cout << "1. Demonstration Game" << endl;
+	cout << "2. Still Lifes" << endl;
+	cout << "3. Oscillators" << endl;
+	cout << "4. Spaceships" << endl;
+	cout << "5. ERN Experiment" << endl;
 
-	cout << "7x9 Patterns" << endl;
-	printPatternArray(patterns7x9, 1, 7, 9);*/
+	int choice;
+	cin >> choice;
 
-	//exampleGrid.printGrid();
-	//exampleGrid.patternSearch(patterns4x4, 1, 4, 4);
+	switch (choice)
+	{
+	case 1:
+	{
+		//clear screen
+		system("cls");
+		cout << "##### Conway's Game of Life - Demonstration Game #####" << endl;
+		cout << "Input a grid width: ";
+		int width;
+		cin >> width;
+		cout << "Input a grid height: ";
+		int height;
+		cin >> height;
+		cout << "Input a number of steps: ";
+		int steps;
+		cin >> steps;
+		cout << "Input a starting number of alive cells: ";
+		int aliveCells;
+		cin >> aliveCells;
+		cout << "Manaully change state or loop? (0/1): ";
+		bool loop;
+		cin >> loop;
 
-	Grid exampleGrid5x5(15, 15);
-	exampleGrid5x5.populateGrid();
+		// Generate a random seed
+		random_device rd;
+		mt19937 gen(rd());
+		uniform_int_distribution<> dis(1, 1000000);
+		int seed = dis(gen);
 
-	// set boat pattern at (2,2)
-	exampleGrid5x5.getGrid()[2][2].SetState(true);
-	exampleGrid5x5.getGrid()[2][3].SetState(true);	
-	exampleGrid5x5.getGrid()[3][2].SetState(true);
-	exampleGrid5x5.getGrid()[3][4].SetState(true);
-	exampleGrid5x5.getGrid()[4][3].SetState(true);
+		Grid newGame(width, height, steps);
+		// random seed
+		newGame.startGame(aliveCells, seed, loop);
+		break;
+	}
+	case 2:
+	{
+		//clear screen
+		system("cls");
+		cout << "##### Conway's Game of Life - Still Lifes #####" << endl;
+		cout << "Select a still life pattern to display:" << endl;
+		cout << "1. Block" << endl;
+		cout << "2. Beehive" << endl;
+		cout << "3. Beehive90" << endl;
+		int patternChoice;
+		cin >> patternChoice;
 
-	//// set boatrotated90 pattern at (5,5)
-	//exampleGrid5x5.getGrid()[6][6].SetState(true);
-	//exampleGrid5x5.getGrid()[6][7].SetState(true);
-	//exampleGrid5x5.getGrid()[5][6].SetState(true);
-	//exampleGrid5x5.getGrid()[5][8].SetState(true);
-	//exampleGrid5x5.getGrid()[4][7].SetState(true);
-
-	// set blinker pattern at (8,8)
-	exampleGrid5x5.getGrid()[8][8].SetState(true);
-	exampleGrid5x5.getGrid()[9][8].SetState(true);
-	exampleGrid5x5.getGrid()[10][8].SetState(true);
-
-
-	exampleGrid5x5.printGrid();
-	exampleGrid5x5.patternSearch(patterns5x5, 9, 5, 5);
-	exampleGrid5x5.patternSearch(patterns5x3, 1, 5, 3);
-
+		switch (patternChoice)
+		{
+		case 1:
+			printPatternArray(&blockPattern[0], 1, 4, 4);
+			break;
+		case 2:
+			printPatternArray(&beehivePattern[0], 1, 5, 6);
+			break;
+		case 3:
+			printPatternArray(&beehivePattern90[0], 1, 6, 5);
+			break;
+		default:
+			cout << "Invalid choice." << endl;
+			break;
+		}
+		break;
+	}
 	return 0;
+	}
 }
-
-
-
-
-
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

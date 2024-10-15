@@ -1,4 +1,5 @@
 class Cell;
+class Patterns;
 
 class Grid {
 	private:
@@ -24,9 +25,9 @@ class Grid {
 		void printGrid();
 		void updateGrid();
 		void randomlyPopulate(int x, unsigned int seed);
-		void startGame(int x, unsigned int seed);
+		void startGame(int x, unsigned int seed, bool loop);
 		bool gridStateCheck();
-		void patternSearch(const bool** patternArray, int patternCount, int height, int width);
+		void patternSearch(Patterns** patternArray);
 
 
 
@@ -41,6 +42,7 @@ class Grid {
 		void setStepCount(int step);
 		void setGridState(bool state);
 		void setGrid();
-
-
 };
+
+
+int* specificSearch(Patterns** patternArray);

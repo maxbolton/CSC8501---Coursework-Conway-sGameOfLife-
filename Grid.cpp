@@ -14,6 +14,7 @@ Grid::Grid()
 	this->y_size = default_size;
 	this->step_count = default_step;
 	this->grid = nullptr;
+	this->gridState = false;
 }
 
 Grid::Grid(int x, int y)
@@ -22,6 +23,7 @@ Grid::Grid(int x, int y)
 	this->y_size = y;
 	this->step_count = default_step;
 	this->grid = nullptr;
+	this->gridState = false;
 }
 
 Grid::Grid(int x, int y, int step)
@@ -30,6 +32,7 @@ Grid::Grid(int x, int y, int step)
 	this->y_size = y;
 	this->step_count = step;
 	this->grid = nullptr;
+	this->gridState = false;
 }
 
 Grid::~Grid()
@@ -41,21 +44,23 @@ Grid::~Grid()
 }
 #pragma endregion
 
-const bool* patterns4x4[1] = { &blockPattern[0][0] };
+const bool* blockPatterns[1] = { &blockPattern[0][0] };
 
-const bool* patterns5x5[9] = { &boatPattern[0][0], &boatPattern90[0][0], &boatPattern180[0][0], &boatPattern270[0][0], &tubPattern[0][0], &gliderPattern[0][0], &gliderPattern90[0][0], &gliderPattern180[0][0], &gliderPattern270[0][0] };
+const bool* blinkerPatterns[1] = { &blinkerPattern[0][0] };
 
-const bool* patterns5x6[1] = { &beehivePattern[0][0] };
+const bool* gliderPatterns[4] = { &gliderPattern[0][0], &gliderPattern90[0][0], &gliderPattern180[0][0], &gliderPattern270[0][0] };
 
-const bool* pattern6x5[1] = { &beehivePattern90[0][0] };
+const bool* beehivePatterns5x6[1] = { &beehivePattern[0][0] };
 
-const bool* patterns6x6[4] = { &loafPattern[0][0], &loafPattern90[0][0], &loafPattern180[0][0], &loafPattern270[0][0] };
+const bool* beehivePatterns6x5[1] = { &beehivePattern90[0][0] };
 
-const bool* patterns6x7[1] = { &lwssPattern[0][0] };
+const bool* toadpatterns[2] = { &toadPattern[0][0], &toadPattern90[0][0] };
 
-const bool* patterns7x8[1] = { &mwssPattern[0][0] };
+const bool* lwssPatterns[1] = { &lwssPattern[0][0] };
 
-const bool* patterns7x9[1] = { &hwssPattern[0][0] };
+const bool* mwssPatterns[1] = { &mwssPattern[0][0] };
+
+const bool* hwssPatterns[1] = { &hwssPattern[0][0] };
 
 #pragma region Grid Methods
 void Grid::populateGrid() {
@@ -82,7 +87,7 @@ void Grid::printGrid()
 			cout << ".";
 			if (grid[i][j].getState() == true)
 			{
-				cout << "x";
+				cout << "0";
 			}
 			else
 			{
@@ -168,18 +173,34 @@ void Grid::randomlyPopulate(int x, unsigned int seed)
 	}
 }
 
-void Grid::startGame(int x, unsigned int seed) {
+void Grid::startGame(int x, unsigned int seed, bool loop) {
 	populateGrid();
 	randomlyPopulate(x, seed);
+
 
 	for (int i = 0; i < step_count; i++)
 	{
 
 		system("cls");
 		this->printGrid();
-		this->gridStateCheck();
 		this->updateGrid();
-		this_thread::sleep_for(chrono::milliseconds(500));
+		if (!gridStateCheck()) {
+			cout << "All cells are dead. Game over." << endl;
+			break;
+		}
+
+		// if loop is false, wait for user input to continue
+		if (!loop) {
+			cout << "Press Enter to continue..." << endl;
+			cin.ignore();
+			cin.get();
+		}
+		// if loop is true, sleep for 500ms and continue without user input
+		else {
+			this_thread::sleep_for(chrono::milliseconds(500));
+		}
+
+		
 
 	}
 
@@ -195,7 +216,6 @@ bool Grid::gridStateCheck() {
 			{
 				// break out of the loop and do patternSearch
 				this->setGridState(true);
-				patternSearch(patterns4x4, 1, 4, 4);
 				return true;
 			}
 		}
@@ -205,18 +225,30 @@ bool Grid::gridStateCheck() {
 
 }
 
-void Grid::patternSearch(const bool** patternArray, int patternCount, int height, int width) {
+
+// template?? input array of patterns to search for or single pattern
+void Grid::patternSearch(Patterns** patternArray) {
 
 	// Iterate through the grid, allowing the pattern to start anywhere
 	// start at -1 & end at +1 to account 1 cell buffer around grid
 
-	for (int p = 0; p < patternCount; p++)
+	// iterate through each pattern
+
+	for (int p = 0; p < 3; p++)
 	{
+
+		// currentPattern points to the current pattern in the array
+		Patterns* currentPattern = patternArray[p];
+		int height = currentPattern->getX();
+		int width = currentPattern->getY();
+		bool match = true;
+
+		cout << "Searching for pattern: " << currentPattern->getName() << endl;
 
 		for (int i = -1; i < (y_size + 2) - height; i++) { // rows
 			for (int j = -1; j < (x_size + 2) - width; j++) { // columns
 
-				bool match = true;
+				match = true;
 
 				int patternHeight = height;
 				int patternWidth = width;
@@ -247,9 +279,8 @@ void Grid::patternSearch(const bool** patternArray, int patternCount, int height
 						int jOffset = j + l;
 
 
-						if (grid[iOffset][jOffset].getState() != patternArray[p][k * width + l]) {
+						if (grid[iOffset][jOffset].getState() != currentPattern->getPattern()[k * width + l]) {
 							match = false;
-							//cout << "No pattern found: " << j << ", " << i << " -> " << jOffset << ", " << iOffset << endl;
 							break;
 
 						}
@@ -257,7 +288,7 @@ void Grid::patternSearch(const bool** patternArray, int patternCount, int height
 					if (!match) { break; }
 				}
 				if (match) {
-					cout << "Pattern found at (" << i << ", " << j << ")" << endl;
+					cout << "Pattern " << currentPattern->getName() << " found at(" << i << ", " << j << ")" << endl;
 				}
 			}
 		}
@@ -266,6 +297,40 @@ void Grid::patternSearch(const bool** patternArray, int patternCount, int height
 	return;
 }
 
+int* specificSearch(Patterns** patternArray) {
+	int width = 50;
+	int height = 50;
+	int alive = 50;
+	int stepCount = 100;
+	int iterations = 0;
+
+	//get random seed
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(0, 1000000);
+
+
+
+	while (true) {
+		int seed = dis(gen);
+		Grid newGame(width, height, 100);
+		newGame.randomlyPopulate(alive, seed);
+
+
+		for (int i = 0; i < stepCount; i++)
+		{
+			newGame.patternSearch(patternArray);
+			newGame.updateGrid();
+
+		}
+		
+	}
+
+
+
+
+	return 0;
+}
 
 
 #pragma endregion

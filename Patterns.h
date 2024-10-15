@@ -10,26 +10,25 @@ class Patterns {
 	private:
 		int x;
 		int y;
-		bool* patterns;
-		int rotationCount;
-		bool flipped;
+		const char* name;
+		const bool* pattern;
 
 	public:
-		Patterns(int x, int y, const bool* patterns, int rotationCount, bool flipped);
+		Patterns(int x, int y, const char* name, const bool* pattern);
 		~Patterns();
 		int getX();
 		int getY();
-		bool* getPatterns();
-		int getRotationCount();
-		bool getFlipped();
+		const char* getName();
+		const bool* getPattern();
+
 		void setX(int x);	
 		void setY(int y);
-		void setPatterns(bool* patterns);
-		void setRotationCount(int rotationCount);
-		void setFlipped(bool flipped);
-		void rotatePattern();
-		void flipPattern();
+		void setName(const char* name);
+		void setPattern(const bool* pattern);
 };
+
+
+#endif
 
 
 
@@ -59,92 +58,6 @@ const bool beehivePattern90[6][5] = {
 	{0, 0, 0, 0, 0},
 	{0, 0, 1, 0, 0},
 	{0, 1, 0, 1, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0}
-};
-
-// Loaf
-const bool loafPattern[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 0, 1, 1, 0, 0},
-	{0, 1, 0, 0, 1, 0},
-	{0, 0, 1, 0, 1, 0},
-	{0, 0, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Loaf (Rotated 90)
-const bool loafPattern90[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 1, 0},
-	{0, 1, 0, 0, 1, 0},
-	{0, 0, 1, 1, 0, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Loaf (Rotated 180)
-const bool loafPattern180[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 0, 1, 0, 0, 0},
-	{0, 1, 0, 1, 0, 0},
-	{0, 1, 0, 0, 1, 0},
-	{0, 0, 1, 1, 0, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Loaf (Rotated 270)
-const bool loafPattern270[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 0, 1, 1, 0, 0},
-	{0, 1, 0, 0, 1, 0},
-	{0, 1, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Boat
-const bool boatPattern[5][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 1, 1, 0, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0}
-};
-
-// Boat (Rotated 90)
-const bool boatPattern90[5][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 0, 1, 1, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0}
-};
-
-// Boat (Rotated 180)
-const bool boatPattern180[5][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 1, 0},
-	{0, 0, 0, 0, 0}
-};
-
-// Boat (Rotated 270)
-const bool boatPattern270[5][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 1, 0, 1, 0},
-	{0, 1, 1, 0, 0},
-	{0, 0, 0, 0, 0}
-};
-
-
-// Tub
-const bool tubPattern[5][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 0, 1, 0, 0},
 	{0, 1, 0, 1, 0},
 	{0, 0, 1, 0, 0},
 	{0, 0, 0, 0, 0}
@@ -189,72 +102,6 @@ const bool toadPattern90[6][6] = {
 	{0, 0, 1, 1, 0, 0},
 	{0, 0, 0, 0, 0, 0}
 };
-
-// Beacon
-const bool beaconPattern[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 1, 1, 0, 0, 0},
-	{0, 1, 0, 0, 0, 0},
-	{0, 0, 0, 0, 1, 0},
-	{0, 0, 0, 1, 1, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Beacon (Rotated 90)
-const bool beaconPattern90[6][6] = {
-	{0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 1, 0},
-	{0, 0, 0, 0, 1, 0},
-	{0, 1, 0, 0, 0, 0},
-	{0, 1, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0}
-};
-
-// Pulsar
-const bool pulsarPattern[15][15] = {
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-};
-
-// Pentadecathlon
-const bool pentadecathlonPattern[12][5] = {
-	{0, 0, 0, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 1, 0, 1, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0}
-};
-
-// Pentadecathlon (Horizontal)
-const bool pentadecathlonPattern90[5][12] = {
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0},
-	{0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0},
-	{0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-};
-
-
 #pragma endregion
 
 
@@ -330,6 +177,3 @@ const bool hwssPattern[7][9] = {
 #pragma endregion
 
 
-
-
-#endif
