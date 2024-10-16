@@ -23,12 +23,10 @@ class Cell {
 		Cell** getNeighbours();
 		int getNeighbourCount() const;
 
-
 		void setIndex(int x, int y);
 		void SetState(bool status);
 		void SetNeighbours(Grid* grid);
 
-		void UpdateNeighbours(Grid** grid);
 		bool checkIfEdge(Grid* grid);
 
 

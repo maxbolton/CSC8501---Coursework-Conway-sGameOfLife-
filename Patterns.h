@@ -1,34 +1,60 @@
 #pragma once
-#ifndef PATTERNS_H
-#define PATTERNS_H
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
+// Templated struct to store pattern data, x&y coordinates/offsets etc.
+template <typename T>
+struct PatternData {
+	T x;
+	T y;
+};
+
 class Patterns {
-	private:
-		int x;
-		int y;
-		const char* name;
-		const bool* pattern;
+private:
+	int x;
+	int y;
+	const char* name;
+	const bool* pattern;
+	int stateCount;
 
-	public:
-		Patterns(int x, int y, const char* name, const bool* pattern);
-		~Patterns();
-		int getX();
-		int getY();
-		const char* getName();
-		const bool* getPattern();
+public:
+	Patterns();
+	Patterns(int x, int y, const char* name, const bool* pattern, const int stateCount);
+	~Patterns();
+	int getX();
+	int getY();
+	const char* getName();
+	const bool* getPattern();
+	int getStateCount();
 
-		void setX(int x);	
-		void setY(int y);
-		void setName(const char* name);
-		void setPattern(const bool* pattern);
+	void setX(int x);
+	void setY(int y);
+	void setName(const char* name);
+	void setPattern(const bool* pattern);
+	void setStateCount(int stateCount);
+};
+
+// Spaceships class, polymorphically derived from Patterns
+class Spaceships : public Patterns {
+private:
+	PatternData<int> offset;
+	Spaceships* nextState;
+
+public:
+	Spaceships(int x, int y, const char* name, const bool* pattern, const int stateCount, PatternData<int> offset);
+	Spaceships(int x, int y, const char* name, const bool* pattern, const int stateCount, PatternData<int> offset, Spaceships* nextState);
+	~Spaceships();
+	PatternData<int> getOffset();
+	Spaceships* getNextState();
+
+	void setOffset(PatternData<int> offset);
+	void setNextState(Spaceships* nextState);
+
 };
 
 
-#endif
 
 
 
@@ -106,39 +132,122 @@ const bool toadPattern90[6][6] = {
 
 
 #pragma region Spaceship Patterns
-// Glider Spaceship
-const bool gliderPattern[5][5] = {
+// Glider Spaceship - 1x1 offset
+const bool gliderPatternSE1[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 0, 0, 0},
+	{0, 0, 1, 1, 0},
+	{0, 1, 1, 0, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternSE2[5][5] = {
 	{0, 0, 0, 0, 0},
 	{0, 0, 1, 0, 0},
 	{0, 0, 0, 1, 0},
 	{0, 1, 1, 1, 0},
 	{0, 0, 0, 0, 0}
 };
+const bool gliderPatternSE3[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 0, 1, 0},
+	{0, 0, 1, 1, 0},
+	{0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternSE4[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 0, 1, 0},
+	{0, 1, 0, 1, 0},
+	{0, 0, 1, 1, 0},
+	{0, 0, 0, 0, 0}
+};
 
-// Glider Spaceship (Rotated 90)
-const bool gliderPattern90[5][5] = {
+// Glider Spaceship - -1x1 offset
+const bool gliderPatternSW1[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 0, 1, 0},
+	{0, 1, 1, 0, 0},
+	{0, 0, 1, 1, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternSW2[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 1, 0, 0},
+	{0, 1, 0, 0, 0},
+	{0, 1, 1, 1, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternSW3[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 0, 1, 0},
+	{0, 1, 1, 0, 0},
+	{0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternSW4[5][5] = {
 	{0, 0, 0, 0, 0},
 	{0, 1, 0, 0, 0},
 	{0, 1, 0, 1, 0},
 	{0, 1, 1, 0, 0},
 	{0, 0, 0, 0, 0}
 };
-
-// Glider Spaceship (Rotated 180)
-const bool gliderPattern180[5][5] = {
+// Glider Spaceship -1x-1
+const bool gliderPatternNW1[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 1, 1, 0},
+	{0, 1, 1, 0, 0},
+	{0, 0, 0, 1, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternNW2[5][5] = {
 	{0, 0, 0, 0, 0},
 	{0, 1, 1, 1, 0},
 	{0, 1, 0, 0, 0},
 	{0, 0, 1, 0, 0},
 	{0, 0, 0, 0, 0}
 };
+const bool gliderPatternNW3[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 1, 0, 0},
+	{0, 1, 1, 0, 0},
+	{0, 1, 0, 1, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternNW4[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 1, 0, 0},
+	{0, 1, 0, 1, 0},
+	{0, 1, 0, 0, 0},
+	{0, 0, 0, 0, 0}
+};
 
-// Glider Spaceship (Rotated 270)
-const bool gliderPattern270[5][5] = {
+// Glider Spaceship 1x-1
+const bool gliderPatternNE1[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 1, 0, 0},
+	{0, 0, 1, 1, 0},
+	{0, 1, 0, 0, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternNE2[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 1, 1, 1, 0},
+	{0, 0, 0, 1, 0},
+	{0, 0, 1, 0, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternNE3[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 1, 0, 0},
+	{0, 0, 1, 1, 0},
+	{0, 1, 0, 1, 0},
+	{0, 0, 0, 0, 0}
+};
+const bool gliderPatternNE4[5][5] = {
 	{0, 0, 0, 0, 0},
 	{0, 0, 1, 1, 0},
 	{0, 1, 0, 1, 0},
-	{0, 0, 0, 1, 1},
+	{0, 0, 0, 1, 0},
 	{0, 0, 0, 0, 0}
 };
 
