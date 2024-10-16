@@ -36,12 +36,11 @@ void printPatternArray(const bool** patternArray, int patternCount, int height, 
 
 int main()
 {
-	//std::cout << "Hello World!\n";
 
-	// instantiate patternObjects
+	#pragma region instatiate pattern objects
 	Patterns block = Patterns(4, 4, "block", &blockPattern[0][0], 1);
 	Patterns beehive = Patterns(5, 6, "beehive", &beehivePattern[0][0], 1);
-	Patterns beehive90 = Patterns(6, 5, "beehive90", &beehivePattern90[0][0], 1);
+	Patterns beehive90 = Patterns(6, 5, "beehive", &beehivePattern90[0][0], 1);
 
 	Patterns* stillLifes[3];
 	stillLifes[0] = &block;
@@ -49,9 +48,9 @@ int main()
 	stillLifes[2] = &beehive90;
 
 	Patterns* blinker = new Patterns(5, 3, "blinker", &blinkerPattern[0][0], 2);
-	Patterns* blinker90 = new Patterns(3, 5, "blinker90", &blinkerPattern90[0][0], 2);
+	Patterns* blinker90 = new Patterns(3, 5, "blinker", &blinkerPattern90[0][0], 2);
 	Patterns* toad = new Patterns(6, 6, "toad", &toadPattern[0][0], 2);
-	Patterns* toad90 = new Patterns(6, 6, "toad90", &toadPattern90[0][0], 2);
+	Patterns* toad90 = new Patterns(6, 6, "toad", &toadPattern90[0][0], 2);
 
 	Patterns* oscillators[4];
 	oscillators[0] = blinker;
@@ -59,57 +58,65 @@ int main()
 	oscillators[2] = toad;
 	oscillators[3] = toad90;
 
-	Spaceships* gliderSE1 = new Spaceships(5, 5, "gliderSE", &gliderPatternSE1[0][0], 4, PatternData<int>{ 0, 0 });
-	Spaceships* gliderSE2 = new Spaceships(5, 5, "glider90", &gliderPatternSE2[0][0], 4, PatternData<int>{ 0, 1 });
-	Spaceships* gliderSE3 = new Spaceships(5, 5, "glider180", &gliderPatternSE3[0][0], 4, PatternData<int>{ 0, 0 });
-	Spaceships* gliderSE4 = new Spaceships(5, 5, "glider270", &gliderPatternSE4[0][0], 4, PatternData<int>{ 1, 0 });
+	Spaceships* gliderSE1 = new Spaceships(5, 5, "gliderSE1", &gliderPatternSE1[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderSE2 = new Spaceships(5, 5, "gliderSE2", &gliderPatternSE2[0][0], 4, PatternData<int>{ 0, 1 });
+	Spaceships* gliderSE3 = new Spaceships(5, 5, "gliderSE3", &gliderPatternSE3[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderSE4 = new Spaceships(5, 5, "gliderSE4", &gliderPatternSE4[0][0], 4, PatternData<int>{ 1, 0 });
 
 	gliderSE1->setNextState(gliderSE2);
 	gliderSE2->setNextState(gliderSE3);
 	gliderSE3->setNextState(gliderSE4);
 	gliderSE4->setNextState(gliderSE1);
 
-	Spaceships* glidersSE[4];
-	glidersSE[0] = gliderSE1;
-	glidersSE[1] = gliderSE2;
-	glidersSE[2] = gliderSE3;
-	glidersSE[3] = gliderSE4;
+	Spaceships* gliderNE1 = new Spaceships(5, 5, "gliderNE1", &gliderPatternNE1[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderNE2 = new Spaceships(5, 5, "gliderNE2", &gliderPatternNE2[0][0], 4, PatternData<int>{ 0, -1 });
+	Spaceships* gliderNE3 = new Spaceships(5, 5, "gliderNE3", &gliderPatternNE3[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderNE4 = new Spaceships(5, 5, "gliderNE4", &gliderPatternNE4[0][0], 4, PatternData<int>{ 1, 0 });
 
-	//Grid newGame(25, 25, 25);
-	//newGame.startGame(75, 18374234);
+	gliderNE1->setNextState(gliderNE2);
+	gliderNE2->setNextState(gliderNE3);
+	gliderNE3->setNextState(gliderNE4);
+	gliderNE4->setNextState(gliderNE1);
 
-	/*
-	Grid exampleGrid(10, 10);
-	exampleGrid.populateGrid();
+	Spaceships* gliderSW1 = new Spaceships(5, 5, "gliderSW1", &gliderPatternSW1[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderSW2 = new Spaceships(5, 5, "gliderSW2", &gliderPatternSW2[0][0], 4, PatternData<int>{ 0, 1 });
+	Spaceships* gliderSW3 = new Spaceships(5, 5, "gliderSW3", &gliderPatternSW3[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderSW4 = new Spaceships(5, 5, "gliderSW4", &gliderPatternSW4[0][0], 4, PatternData<int>{ -1, 0 });
 
+	gliderSW1->setNextState(gliderSW2);
+	gliderSW2->setNextState(gliderSW3);
+	gliderSW3->setNextState(gliderSW4);
+	gliderSW4->setNextState(gliderSW1);
 
-	// block pattern
-	exampleGrid.getGrid()[1][1].SetState(true);
-	exampleGrid.getGrid()[1][2].SetState(true);
-	exampleGrid.getGrid()[2][1].SetState(true);
-	exampleGrid.getGrid()[2][2].SetState(true);
+	Spaceships* gliderNW1 = new Spaceships(5, 5, "gliderNW1", &gliderPatternNW1[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderNW2 = new Spaceships(5, 5, "gliderNW2", &gliderPatternNW2[0][0], 4, PatternData<int>{ 0, -1 });
+	Spaceships* gliderNW3 = new Spaceships(5, 5, "gliderNW3", &gliderPatternNW3[0][0], 4, PatternData<int>{ 0, 0 });
+	Spaceships* gliderNW4 = new Spaceships(5, 5, "gliderNW4", &gliderPatternNW4[0][0], 4, PatternData<int>{ -1, 0 });
 
-	// beehive pattern
-	exampleGrid.getGrid()[4][2].SetState(true);
-	exampleGrid.getGrid()[4][3].SetState(true);
-	exampleGrid.getGrid()[5][1].SetState(true);
-	exampleGrid.getGrid()[5][4].SetState(true);
-	exampleGrid.getGrid()[6][2].SetState(true);
-	exampleGrid.getGrid()[6][3].SetState(true);
+	gliderNW1->setNextState(gliderNW2);
+	gliderNW2->setNextState(gliderNW3);
+	gliderNW3->setNextState(gliderNW4);
+	gliderNW4->setNextState(gliderNW1);
 
-	// beehive90 pattern
-	exampleGrid.getGrid()[2][6].SetState(true);
-	exampleGrid.getGrid()[3][6].SetState(true);
-	exampleGrid.getGrid()[1][7].SetState(true);
-	exampleGrid.getGrid()[4][7].SetState(true);
-	exampleGrid.getGrid()[2][8].SetState(true);
-	exampleGrid.getGrid()[3][8].SetState(true);
+	Spaceships* gliders[16];
+	gliders[0] = gliderSE1;
+	gliders[1] = gliderSE2;
+	gliders[2] = gliderSE3;
+	gliders[3] = gliderSE4;
+	gliders[4] = gliderNE1;
+	gliders[5] = gliderNE2;
+	gliders[6] = gliderNE3;
+	gliders[7] = gliderNE4;
+	gliders[8] = gliderSW1;
+	gliders[9] = gliderSW2;
+	gliders[10] = gliderSW3;
+	gliders[11] = gliderSW4;
+	gliders[12] = gliderNW1;
+	gliders[13] = gliderNW2;
+	gliders[14] = gliderNW3;
+	gliders[15] = gliderNW4;
 
-
-	exampleGrid.printGrid();
-	exampleGrid.patternSearch(stillLifes);
-	*/
-
+	#pragma endregion
 
 	// Command Line Interface
 	while (true)
@@ -179,7 +186,20 @@ int main()
 				if (visualise == "yes")
 				{	// starter cells, seed, loop
 					newGame.startGame(true);
-					this_thread::sleep_for(chrono::seconds(2));
+
+					cout << "Continue for 10 steps? (yes/no):" << endl;
+					string cont;
+					cin >> cont;
+					if (cont == "yes")
+					{
+						for (int i = 0; i < 10; i++)
+						{
+							system("cls");
+							newGame.updateGrid();
+							newGame.printGrid();
+							this_thread::sleep_for(chrono::seconds(1));
+						}
+					}
 				}
 
 				break;
@@ -201,7 +221,20 @@ int main()
 				if (visualise == "yes")
 				{	// starter cells, seed, loop
 					newGame.startGame(true);
-					this_thread::sleep_for(chrono::seconds(2));
+
+					cout << "Continue for 10 steps? (yes/no):" << endl;
+					string cont;
+					cin >> cont;
+					if (cont == "yes")
+					{
+						for (int i = 0; i < 10; i++)
+						{
+							system("cls");
+							newGame.updateGrid();
+							newGame.printGrid();
+							this_thread::sleep_for(chrono::seconds(1));
+						}
+					}
 				}
 				break;
 
@@ -214,27 +247,35 @@ int main()
 				// x, y, steps
 				Grid newGame(20, 20, 20);
 				newGame.setAliveCells(60);
-				int size = sizeof(glidersSE) / sizeof(glidersSE[0]);
+				int size = 16;
 
 				newGame.populateGrid();
-				// glider pattern
-				newGame.getGrid()[1][5].SetState(true);
-				newGame.getGrid()[2][6].SetState(true);
-				newGame.getGrid()[3][6].SetState(true);
-				newGame.getGrid()[3][5].SetState(true);
-				newGame.getGrid()[3][4].SetState(true);
+				
 
-				traversalSearch(glidersSE, &newGame, size);
+				traversalSearch(gliders, &newGame, size);
 
-				/*
+				
 				cout << "Visualise Seed? (yes/no): " << endl;
 				string visualise;
 				cin >> visualise;
 				if (visualise == "yes")
-				{	// starter cells, seed, loop
+				{
 					newGame.startGame(true);
-					this_thread::sleep_for(chrono::seconds(2));
-				}*/
+
+					cout << "Continue for 10 steps? (yes/no):" << endl;
+					string cont;
+					cin >> cont;
+					if (cont == "yes")
+					{
+						for (int i = 0; i < 10; i++)
+						{
+							system("cls");
+							newGame.updateGrid();
+							newGame.printGrid();
+							this_thread::sleep_for(chrono::seconds(1));
+						}
+					}
+				}
 				break;
 			}
 		}
