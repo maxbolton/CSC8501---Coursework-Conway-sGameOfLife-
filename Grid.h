@@ -61,5 +61,5 @@ class Grid {
 };
 
 
-void staticSearch(Patterns** patternArray, Grid* newGame, int arraySize);
+Patterns* staticSearch(Patterns** patternArray, Grid* newGame, int arraySize);
 void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize);

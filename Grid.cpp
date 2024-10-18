@@ -289,10 +289,11 @@ void Grid::randomiseSeed() {
 }
 
 
-void staticSearch(Patterns** patternArray, Grid* newGame, int arraySize) {
+Patterns* staticSearch(Patterns** patternArray, Grid* newGame, int arraySize) {
 	
 	int iterations = 0;
 	bool found = false;
+	int arrayP;
 
 	// game iterations
 	while (true) {
@@ -325,6 +326,7 @@ void staticSearch(Patterns** patternArray, Grid* newGame, int arraySize) {
 						newGame->setStepCount(i+ patternArray[p]->getStateCount());
 						cout << "Pattern '" << patternArray[p]->getName() << "' found after " << iterations << " iterations and " << newGame->getStepCount() << " steps." << endl;
 						found = true;
+						arrayP = p;
 						break;
 					}
 				}
@@ -344,7 +346,7 @@ void staticSearch(Patterns** patternArray, Grid* newGame, int arraySize) {
 		
 	}
 
-	return;
+	return patternArray[arrayP];
 }
 
 void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize)
@@ -359,7 +361,6 @@ void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize)
 	    newGame->populateGrid();
 		newGame->randomlyPopulate(newGame->getAliveCells());
 		iterations++;
-
 		// new game, iterate through stepcount
 		for (int i = 0; i < newGame->getStepCount(); i++)
 		{
@@ -373,6 +374,7 @@ void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize)
 				{
 					Spaceships* currentPattern = patternArray[p];
 
+					//cout << "Pattern '" << currentPattern->getName() << "' found." << endl;
 
 					// update grid and search for next pattern including offset
 					match = true;
@@ -386,6 +388,8 @@ void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize)
 							patternPosition.x += currentPattern->getOffset().x;
 							patternPosition.y += currentPattern->getOffset().y;
 							currentPattern = currentPattern->getNextState();
+							system("cls");
+							cout << states + 1 << " states of " << currentPattern->getName() << " found." << endl;
 						}
 						else {
 							match = false;
@@ -399,6 +403,7 @@ void traversalSearch(Spaceships** patternArray, Grid* newGame, int arraySize)
 					newGame->printGrid();
 					newGame->setStepCount(i + patternArray[p]->getStateCount());
 					cout << "Pattern '" << patternArray[p]->getName() << "' found after " << iterations << " iterations and " << newGame->getStepCount() << " steps." << endl;
+					cout << "Located: " << patternPosition.x << ", " << patternPosition.y << endl;
 					return;
 				}
 			}
@@ -450,12 +455,18 @@ bool Grid::coordinateSearch(Spaceships* currentPattern, PatternData<int> coordin
 			int iOffset = i + k;
 			int jOffset = j + l;
 
+			if (iOffset < 0) { match = false; break; }
+			if (iOffset > height) { match = false; break; }
+			if (jOffset < 0) { match = false; break; }
+			if (iOffset > width) { match = false; break; }
 
 			if (grid[iOffset][jOffset].getState() != currentPattern->getNextState()->getPattern()[k * width + l]) {
 				match = false;
 				break;
 
 			}
+			
+
 
 		}
 		if (!match) { break; }
